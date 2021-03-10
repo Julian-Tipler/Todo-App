@@ -10,21 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_10_191741) do
-
-  create_table "items", force: :cascade do |t|
-    t.integer "list_id"
-    t.text "title"
-    t.text "description"
-    t.boolean "status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["list_id"], name: "index_items_on_list_id"
-  end
+ActiveRecord::Schema.define(version: 2021_03_10_194137) do
 
   create_table "lists", force: :cascade do |t|
+    t.string "title"
+    t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.string "title"
+    t.string "description"
+    t.boolean "status"
+    t.integer "list_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_id"], name: "index_tasks_on_list_id"
   end
 
 end
