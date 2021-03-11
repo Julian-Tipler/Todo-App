@@ -20,6 +20,8 @@ class List extends React.Component {
     render() {
         return(
             <div className='list'>
+                <div>
+                </div>
                 <form onSubmit = {this.handleSubmit}>
                     <input placeholder="enter task"></input>
                     <button type="submit">add</button>

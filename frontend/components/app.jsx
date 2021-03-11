@@ -1,13 +1,13 @@
 import React from "react";
 import { Route, Redirect, Switch, Link } from 'react-router-dom';
 import ModalList from './modal/modal_list'
-import ListsIndexContainer from './index/lists'
+import ListsContainer from './index/lists_container'
 
 const App = () => (
   <>
     <ModalList/>
     <header></header>
-    <ListsIndexContainer/>
+    <ListsContainer/>
     <footer></footer>
   </>
 );

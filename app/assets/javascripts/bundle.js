@@ -121,7 +121,7 @@ var RECEIVE_LISTS = 'RECEIVE_LISTS';
 
 var receiveLists = function receiveLists(lists) {
   return {
-    type: RECIEVE_LISTS,
+    type: RECEIVE_LISTS,
     lists: lists
   };
 };
@@ -151,14 +151,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _modal_modal_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal/modal_list */ "./frontend/components/modal/modal_list.jsx");
-/* harmony import */ var _index_lists__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index/lists */ "./frontend/components/index/lists.jsx");
+/* harmony import */ var _index_lists_container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index/lists_container */ "./frontend/components/index/lists_container.js");
 
 
 
 
 
 var App = function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_modal_modal_list__WEBPACK_IMPORTED_MODULE_1__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_index_lists__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("footer", null));
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_modal_modal_list__WEBPACK_IMPORTED_MODULE_1__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_index_lists_container__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("footer", null));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
@@ -233,7 +233,7 @@ var List = /*#__PURE__*/function (_React$Component) {
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "list"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
         onSubmit: this.handleSubmit
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
         placeholder: "enter task"
@@ -262,7 +262,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./list */ "./frontend/components/index/list.jsx");
+/* harmony import */ var _actions_list_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/list_actions */ "./frontend/actions/list_actions.js");
+/* harmony import */ var _list__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./list */ "./frontend/components/index/list.jsx");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -288,30 +289,81 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var ListsIndex = /*#__PURE__*/function (_React$Component) {
-  _inherits(ListsIndex, _React$Component);
 
-  var _super = _createSuper(ListsIndex);
+var Lists = /*#__PURE__*/function (_React$Component) {
+  _inherits(Lists, _React$Component);
 
-  function ListsIndex() {
-    _classCallCheck(this, ListsIndex);
+  var _super = _createSuper(Lists);
+
+  function Lists() {
+    _classCallCheck(this, Lists);
 
     return _super.apply(this, arguments);
   }
 
-  _createClass(ListsIndex, [{
+  _createClass(Lists, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.props.fetchLists();
+    }
+  }, {
     key: "render",
     value: function render() {
+      if (Object.values(this.props.lists).length <= 0) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, "Create List");
+      }
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "lists-index"
-      });
+        className: "lists"
+      }, Object.values(this.props.lists).map(function (list, i) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_list__WEBPACK_IMPORTED_MODULE_2__.default, {
+          key: i,
+          list: list
+        });
+      }));
     }
   }]);
 
-  return ListsIndex;
+  return Lists;
 }(react__WEBPACK_IMPORTED_MODULE_0__.Component);
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ListsIndex);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Lists);
+
+/***/ }),
+
+/***/ "./frontend/components/index/lists_container.js":
+/*!******************************************************!*\
+  !*** ./frontend/components/index/lists_container.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _actions_list_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/list_actions */ "./frontend/actions/list_actions.js");
+/* harmony import */ var _lists__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lists */ "./frontend/components/index/lists.jsx");
+
+
+
+
+var msp = function msp(state) {
+  return {
+    lists: state.lists
+  };
+};
+
+var mdp = function mdp(dispatch) {
+  return {
+    fetchLists: function fetchLists() {
+      return dispatch((0,_actions_list_actions__WEBPACK_IMPORTED_MODULE_1__.fetchLists)());
+    }
+  };
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_0__.connect)(msp, mdp)(_lists__WEBPACK_IMPORTED_MODULE_2__.default));
 
 /***/ }),
 
@@ -493,6 +545,7 @@ var listsReducer = function listsReducer() {
 
   switch (action.type) {
     case _actions_list_actions__WEBPACK_IMPORTED_MODULE_0__.RECEIVE_LISTS:
+      console.log(action);
       return Object.assign({}, action.lists);
 
     default:
@@ -520,7 +573,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var rootReducer = (0,redux__WEBPACK_IMPORTED_MODULE_1__.combineReducers)({
-  lists: _lists_reducer__WEBPACK_IMPORTED_MODULE_0__.listsReducer
+  lists: _lists_reducer__WEBPACK_IMPORTED_MODULE_0__.default
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (rootReducer);
 
