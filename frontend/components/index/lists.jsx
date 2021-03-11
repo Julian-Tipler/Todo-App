@@ -46,7 +46,7 @@ class Lists extends React.Component {
         return(
             <div className='lists'>
                 {Object.values(this.props.lists).map((list, i) => {
-                   return <List key={i} list={list} destroyList={this.props.destroyList} updateList={this.props.updateList} createTask={this.props.createTask} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask}/>
+                   return <List key={i} list={list} destroyList={this.props.destroyList} updateList={this.props.updateList} createTask={this.props.createTask} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask} openModal={this.props.openModal} closeModal={this.props.closeModal}/>
                  })}
             </div>
         )

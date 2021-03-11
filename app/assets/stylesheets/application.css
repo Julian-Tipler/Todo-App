@@ -13,10 +13,15 @@
  *= require_tree .
  *= require_self
  */
-
+* {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
 button {
   outline: none;
   box-shadow: none;
+  background-color: rgb(255, 216, 246);
+  border: none;
+  border-radius: 5px;
 }
 
 .body {
@@ -25,4 +30,10 @@ button {
 
 .main-title {
     text-align: center;
+}
+
+input {
+  background-color: inherit;
+  border: 1px solid gray;
+  border-radius: 5px
 }

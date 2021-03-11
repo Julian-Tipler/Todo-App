@@ -10,6 +10,7 @@ class Task extends React.Component {
       this.deleteTask = this.deleteTask.bind(this)
       this.updateTask = this.updateTask.bind(this)
       this.toggleStatus = this.toggleStatus.bind(this)
+      this.openModal = this.openModal.bind(this)
     }
 
     deleteTask(e) {
@@ -32,29 +33,32 @@ class Task extends React.Component {
     
     toggleStatus(e) {
         e.preventDefault()
-
         this.setState(prevState=>({
             ...prevState,
-            status: !prevState.status,
-        }));
-        const task = Object.assign({}, this.props.task, {status:this.state.status})
-        this.props.updateTask(task)
+            status: !this.state.status,
+        }),
+        ()=> {
+            const task = Object.assign({}, this.props.task, {status:this.state.status})
+            this.props.updateTask(task)
+        });
+
+    }
+
+    openModal(){
+        this.props.openModal('open',this.props.task.id,this.props.list.list.id)
     }
 
     render() {
-        console.log(this.state)
-        console.log(this.props.task.status)
 
         return(
-            <div className='task'>
-                {/* <div className={`task-title ${this.props.task.status ? 'strikethrough' : ""} `}>{this.props.task.title}</div> */}
+            <div className='task' >
                 <form onSubmit = {this.updateTask}>
-                    <input className={`task-title ${this.props.task.status ? 'strikethrough' : ""}`} type="text" value={this.state.title} onChange={this.update('title')}/>   
+                    <div className={`task-title ${this.props.task.status===true ? 'strikethrough' : ""}`} onClick={this.openModal}>{this.props.task.title}</div>   
                     <input type="submit" style={{display:"none"}}/>
                 </form>
                 <div>
+                    <button onClick={this.toggleStatus}>--</button>
                     <button onClick={this.deleteTask}>X</button>
-                    <button onClick={this.toggleStatus}>check</button>
                 </div>
             </div>
         )

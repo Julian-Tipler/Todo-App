@@ -10,7 +10,7 @@ List.delete_all
 
 lists = List.create([
     {
-        title:'list1',
+        title:'list 1',
         color:'yellow'
     },
     {
@@ -37,5 +37,12 @@ tasks = Task.create([
         description:'take the cate to the house and to the house again',
         status:false,
         list_id:2
+    }
+])
+
+comments = Comment.create([
+    {
+        body:"first!!!",
+        task_id:1
     }
 ])

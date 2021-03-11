@@ -1,16 +1,18 @@
 import React from 'react';
 import { closeModal } from '../../actions/modal_actions'
 import { connect } from 'react-redux'
-import ModalList from './modal_list'
+import ModalTask from './modal_task'
 
-function Modal({modal, closeModal}) {
+function Modal({modal, lists, closeModal}) {
     if (!modal) {
         return null
     }
+    console.log(modal)
     var component;
-    switch(modal) {
+    switch(modal.modal) {
         case 'open':
-            component = <ModalList/>
+            console.log(lists)
+            component = <ModalTask id={modal.id} list_id={modal.list_id}/>
             break;
         case 'close':
             return null 
@@ -23,8 +25,10 @@ function Modal({modal, closeModal}) {
     }
 
     return (
-        <div className="modal-child" onClick={closeAction}>
-            {component}
+        <div className='modal-background' onClick={closeAction}>
+            <div className="modal-child" >
+                {component}
+            </div>
         </div>
     )
 }
@@ -32,6 +36,7 @@ function Modal({modal, closeModal}) {
 const mapStateToProps = state => {
     return {
         modal: state.modal,
+        lists: state.lists
     };
 };
 

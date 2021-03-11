@@ -4,9 +4,8 @@ import Task from './task'
 class List extends React.Component {
     constructor(props) {  
       super(props)
-      console.log(this.props.list)
       this.state = {
-        title: this.props.list.list.title,
+        title: "",
         task: {
             title: "",
             description: "",
@@ -21,12 +20,6 @@ class List extends React.Component {
     componentDidMount() {
         this.setState({
             title: this.props.list.list.title,
-            task: {
-                title: "",
-                description: "",
-                status: "",
-                list_id: this.props.list.list.id
-            }
         })
     }
 
@@ -50,19 +43,14 @@ class List extends React.Component {
             task: {
                 title: "",
                 description: "",
-                status: "",
+                status: false,
                 list_id: this.props.list.list.id
             }
         })
     }
 
     updateTitle(property) {
-        return e => this.setState(prevState=> ({
-            [property]: e.target.value,
-            task:{
-                ...prevState.task,
-            }
-        }));
+        return e => this.setState({ [property]: e.target.value });
     }
 
     updateTask(property) {
@@ -76,20 +64,24 @@ class List extends React.Component {
     }
 
     render() {
+        console.log(this.state.task)
         return(
             <div className='list'>
-                <form onSubmit = {this.handleUpdate}>
-                    <input className='title' type="text" value={this.state.title} onChange={this.updateTitle('title')}/>   
+                {/* <form onSubmit = {this.handleUpdate}>
+                    <input className='title' type="text" placeholder={this.props.list.list.title} onChange={this.updateTitle('title')}/>   
                     <input type="submit" style={{display:"none"}}/>
-                </form>
+                </form> */}
+                <div className='title-delete'>
+                    <div className='title'>{this.props.list.list.title}</div>
+                    <button onClick={this.handleDelete}>Delete List</button>
+                </div>
                 <form className='create-task task' onSubmit = {this.handleSubmitTask}>
                     <input placeholder="enter task" type="text" value={this.state.task.title} onChange={this.updateTask('title')}></input>
                     <button type="submit">add</button>
                 </form>
                 {Object.values(this.props.list.tasks).reverse().map((task, i) => (
-                    <Task key={i} task={task} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask}/>
+                    <Task key={i} task={task} list={this.props.list} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask} openModal={this.props.openModal} closeModal={this.props.closeModal}/>
                 ))}
-                <button onClick={this.handleDelete}>Delete</button>
             </div>
 
         )
