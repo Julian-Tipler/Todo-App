@@ -1,5 +1,3 @@
 class List < ApplicationRecord
-    has_many :reviews
-
-    
+    has_many :tasks
 end

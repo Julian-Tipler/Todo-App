@@ -19,7 +19,6 @@ class NewListForm extends React.Component {
     handleSubmit(e) {
       e.preventDefault();
       let listForm = Object.assign({}, this.state)
-      console.log(this.props)
       this.props.createList(listForm)
       this.setState({
           title: "",

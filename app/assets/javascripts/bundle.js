@@ -198,6 +198,61 @@ var closeModal = function closeModal() {
 
 /***/ }),
 
+/***/ "./frontend/actions/task_actions.js":
+/*!******************************************!*\
+  !*** ./frontend/actions/task_actions.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RECEIVE_LISTS": () => (/* binding */ RECEIVE_LISTS),
+/* harmony export */   "createTask": () => (/* binding */ createTask),
+/* harmony export */   "deleteTask": () => (/* binding */ deleteTask),
+/* harmony export */   "updateTask": () => (/* binding */ updateTask)
+/* harmony export */ });
+/* harmony import */ var _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/task_api_util */ "./frontend/util/task_api_util.js");
+
+var RECEIVE_LISTS = 'RECEIVE_LISTS';
+
+var receiveLists = function receiveLists(lists) {
+  return {
+    type: RECEIVE_LISTS,
+    lists: lists
+  };
+};
+
+var createTask = function createTask(taskForm) {
+  return function (dispatch) {
+    _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.createTask(taskForm).then(function (lists) {
+      return dispatch(receiveLists(lists.lists));
+    }, function (err) {
+      return dispatch(receiveErrors(err));
+    });
+  };
+};
+var deleteTask = function deleteTask(task) {
+  return function (dispatch) {
+    _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.deleteTask(task).then(function (lists) {
+      return dispatch(receiveLists(lists.lists));
+    }, function (err) {
+      return dispatch(receiveErrors(err));
+    });
+  };
+};
+var updateTask = function updateTask(task) {
+  return function (dispatch) {
+    return _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.updateTask(task).then(function (lists) {
+      return dispatch(receiveLists(lists.lists));
+    }, function (err) {
+      return dispatch(receiveErrors(err));
+    });
+  };
+};
+
+/***/ }),
+
 /***/ "./frontend/components/app.jsx":
 /*!*************************************!*\
   !*** ./frontend/components/app.jsx ***!
@@ -244,8 +299,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./task */ "./frontend/components/index/task.jsx");
-/* harmony import */ var _actions_list_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/list_actions */ "./frontend/actions/list_actions.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -272,7 +330,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-
 var List = /*#__PURE__*/function (_React$Component) {
   _inherits(List, _React$Component);
 
@@ -284,49 +341,98 @@ var List = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, List);
 
     _this = _super.call(this, props);
+    console.log(_this.props.list);
     _this.state = {
-      title: _this.props.list.title
+      title: _this.props.list.list.title,
+      task: {
+        title: "",
+        description: "",
+        status: false,
+        list_id: _this.props.list.list.id
+      }
     };
-    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.handleDelete = _this.handleDelete.bind(_assertThisInitialized(_this));
     _this.handleUpdate = _this.handleUpdate.bind(_assertThisInitialized(_this));
+    _this.handleSubmitTask = _this.handleSubmitTask.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(List, [{
-    key: "handleSubmit",
-    value: function handleSubmit(e) {
-      e.preventDefault();
-      var task = Object.assign({}, this.state); //
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.setState({
+        title: this.props.list.list.title,
+        task: {
+          title: "",
+          description: "",
+          status: "",
+          list_id: this.props.list.list.id
+        }
+      });
     }
   }, {
     key: "handleDelete",
     value: function handleDelete(e) {
       e.preventDefault();
-      this.props.destroyList(this.props.list);
+      this.props.destroyList(this.props.list.list);
     }
   }, {
     key: "handleUpdate",
     value: function handleUpdate(e) {
       e.preventDefault();
-      var list = Object.assign({}, this.props.list, {
+      var list = Object.assign({}, this.props.list.list, {
         title: this.state.title
       });
-      console.log(list);
       this.props.updateList(list);
     }
   }, {
-    key: "update",
-    value: function update(property) {
+    key: "handleSubmitTask",
+    value: function handleSubmitTask(e) {
+      e.preventDefault();
+      var taskForm = this.state.task;
+      this.props.createTask(taskForm);
+      this.setState({
+        title: this.props.list.list.title,
+        task: {
+          title: "",
+          description: "",
+          status: "",
+          list_id: this.props.list.list.id
+        }
+      });
+    }
+  }, {
+    key: "updateTitle",
+    value: function updateTitle(property) {
       var _this2 = this;
 
       return function (e) {
-        return _this2.setState(_defineProperty({}, property, e.target.value));
+        return _this2.setState(function (prevState) {
+          var _ref;
+
+          return _ref = {}, _defineProperty(_ref, property, e.target.value), _defineProperty(_ref, "task", _objectSpread({}, prevState.task)), _ref;
+        });
+      };
+    }
+  }, {
+    key: "updateTask",
+    value: function updateTask(property) {
+      var _this3 = this;
+
+      return function (e) {
+        return _this3.setState(function (prevState) {
+          return {
+            title: prevState.title,
+            task: _objectSpread(_objectSpread({}, prevState.task), {}, _defineProperty({}, property, e.target.value))
+          };
+        });
       };
     }
   }, {
     key: "render",
     value: function render() {
+      var _this4 = this;
+
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "list"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
@@ -335,19 +441,30 @@ var List = /*#__PURE__*/function (_React$Component) {
         className: "title",
         type: "text",
         value: this.state.title,
-        onChange: this.update('title')
+        onChange: this.updateTitle('title')
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
         type: "submit",
         style: {
           display: "none"
         }
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
-        onSubmit: this.handleSubmit
+        className: "create-task task",
+        onSubmit: this.handleSubmitTask
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
-        placeholder: "enter task"
+        placeholder: "enter task",
+        type: "text",
+        value: this.state.task.title,
+        onChange: this.updateTask('title')
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
         type: "submit"
-      }, "add")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+      }, "add")), Object.values(this.props.list.tasks).reverse().map(function (task, i) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_task__WEBPACK_IMPORTED_MODULE_1__.default, {
+          key: i,
+          task: task,
+          deleteTask: _this4.props.deleteTask,
+          updateTask: _this4.props.updateTask
+        });
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
         onClick: this.handleDelete
       }, "Delete"));
     }
@@ -450,17 +567,16 @@ var Lists = /*#__PURE__*/function (_React$Component) {
       var _this3 = this;
 
       if (Object.values(this.props.lists).length <= 0) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-          className: "lists"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
-          onSubmit: this.handleSubmit
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
-          type: "text",
-          value: this.state.title,
-          onChange: this.update('title')
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-          type: "submit"
-        }, "add")));
+        return (
+          /*#__PURE__*/
+          // <div className='lists'>
+          //     <form onSubmit = {this.handleSubmit}>
+          //         <input type="text" value={this.state.title} onChange={this.update('title')}/>                    
+          //         <button type="submit">add</button>
+          //     </form>
+          // </div>
+          react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null)
+        );
       }
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -470,7 +586,10 @@ var Lists = /*#__PURE__*/function (_React$Component) {
           key: i,
           list: list,
           destroyList: _this3.props.destroyList,
-          updateList: _this3.props.updateList
+          updateList: _this3.props.updateList,
+          createTask: _this3.props.createTask,
+          deleteTask: _this3.props.deleteTask,
+          updateTask: _this3.props.updateTask
         });
       }));
     }
@@ -496,7 +615,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions_list_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/list_actions */ "./frontend/actions/list_actions.js");
-/* harmony import */ var _lists__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lists */ "./frontend/components/index/lists.jsx");
+/* harmony import */ var _actions_task_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/task_actions */ "./frontend/actions/task_actions.js");
+/* harmony import */ var _lists__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./lists */ "./frontend/components/index/lists.jsx");
+
 
 
 
@@ -520,11 +641,20 @@ var mdp = function mdp(dispatch) {
     },
     updateList: function updateList(list) {
       return dispatch((0,_actions_list_actions__WEBPACK_IMPORTED_MODULE_1__.updateList)(list));
+    },
+    createTask: function createTask(taskForm) {
+      return dispatch((0,_actions_task_actions__WEBPACK_IMPORTED_MODULE_2__.createTask)(taskForm));
+    },
+    deleteTask: function deleteTask(task) {
+      return dispatch((0,_actions_task_actions__WEBPACK_IMPORTED_MODULE_2__.deleteTask)(task));
+    },
+    updateTask: function updateTask(task) {
+      return dispatch((0,_actions_task_actions__WEBPACK_IMPORTED_MODULE_2__.updateTask)(task));
     }
   };
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_0__.connect)(msp, mdp)(_lists__WEBPACK_IMPORTED_MODULE_2__.default));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_0__.connect)(msp, mdp)(_lists__WEBPACK_IMPORTED_MODULE_3__.default));
 
 /***/ }),
 
@@ -599,7 +729,6 @@ var NewListForm = /*#__PURE__*/function (_React$Component) {
     value: function handleSubmit(e) {
       e.preventDefault();
       var listForm = Object.assign({}, this.state);
-      console.log(this.props);
       this.props.createList(listForm);
       this.setState({
         title: "",
@@ -676,6 +805,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -703,20 +838,86 @@ var Task = /*#__PURE__*/function (_React$Component) {
 
   var _super = _createSuper(Task);
 
-  function Task() {
+  function Task(props) {
+    var _this;
+
     _classCallCheck(this, Task);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, props);
+    _this.state = {
+      title: _this.props.task.title,
+      status: _this.props.task.status
+    };
+    _this.deleteTask = _this.deleteTask.bind(_assertThisInitialized(_this));
+    _this.updateTask = _this.updateTask.bind(_assertThisInitialized(_this));
+    _this.toggleStatus = _this.toggleStatus.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(Task, [{
+    key: "deleteTask",
+    value: function deleteTask(e) {
+      e.preventDefault();
+      this.props.deleteTask(this.props.task);
+    }
+  }, {
+    key: "updateTask",
+    value: function updateTask(e) {
+      e.preventDefault();
+      var task = Object.assign({}, this.props.task, {
+        title: this.state.title
+      });
+      this.props.updateTask(task);
+    }
+  }, {
+    key: "update",
+    value: function update(property) {
+      var _this2 = this;
+
+      return function (e) {
+        return _this2.setState(function (prevState) {
+          return _objectSpread(_objectSpread({}, prevState), {}, _defineProperty({}, property, e.target.value));
+        });
+      };
+    }
+  }, {
+    key: "toggleStatus",
+    value: function toggleStatus(e) {
+      e.preventDefault();
+      this.setState(function (prevState) {
+        return _objectSpread(_objectSpread({}, prevState), {}, {
+          status: !prevState.status
+        });
+      });
+      var task = Object.assign({}, this.props.task, {
+        status: this.state.status
+      });
+      this.props.updateTask(task);
+    }
+  }, {
     key: "render",
     value: function render() {
+      console.log(this.state);
+      console.log(this.props.task.status);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "task"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "task-title"
-      }, "Walk the dog"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", null, "X"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", null, "check"));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
+        onSubmit: this.updateTask
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+        className: "task-title ".concat(this.props.task.status ? 'strikethrough' : ""),
+        type: "text",
+        value: this.state.title,
+        onChange: this.update('title')
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+        type: "submit",
+        style: {
+          display: "none"
+        }
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+        onClick: this.deleteTask
+      }, "X"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+        onClick: this.toggleStatus
+      }, "check")));
     }
   }]);
 
@@ -960,6 +1161,42 @@ var updateList = function updateList(list) {
     method: 'PATCH',
     url: "api/lists/".concat(list.id),
     data: list
+  });
+};
+
+/***/ }),
+
+/***/ "./frontend/util/task_api_util.js":
+/*!****************************************!*\
+  !*** ./frontend/util/task_api_util.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createTask": () => (/* binding */ createTask),
+/* harmony export */   "deleteTask": () => (/* binding */ deleteTask),
+/* harmony export */   "updateTask": () => (/* binding */ updateTask)
+/* harmony export */ });
+var createTask = function createTask(taskForm) {
+  return $.ajax({
+    method: 'POST',
+    url: "/api/tasks",
+    data: taskForm
+  });
+};
+var deleteTask = function deleteTask(task) {
+  return $.ajax({
+    method: 'DELETE',
+    url: "/api/tasks/".concat(task.id)
+  });
+};
+var updateTask = function updateTask(task) {
+  return $.ajax({
+    method: 'PATCH',
+    url: "api/tasks/".concat(task.id),
+    data: task
   });
 };
 

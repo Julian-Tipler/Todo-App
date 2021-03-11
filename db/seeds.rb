@@ -27,6 +27,12 @@ tasks = Task.create([
         list_id:1
     },
     {
+        title:'run the other doge',
+        description:'take the doge to the park and to the beach',
+        status:false,
+        list_id:1
+    },
+    {
         title:'walk the cate',
         description:'take the cate to the house and to the house again',
         status:false,

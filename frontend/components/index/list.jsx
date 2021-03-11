@@ -1,56 +1,94 @@
 import React from 'react';
 import Task from './task'
-import { deleteList } from '../../actions/list_actions';
 
 class List extends React.Component {
     constructor(props) {  
       super(props)
+      console.log(this.props.list)
       this.state = {
-        title: this.props.list.title
+        title: this.props.list.list.title,
+        task: {
+            title: "",
+            description: "",
+            status: false,
+            list_id: this.props.list.list.id
+        }
       }
-      this.handleSubmit = this.handleSubmit.bind(this)
       this.handleDelete = this.handleDelete.bind(this)
       this.handleUpdate = this.handleUpdate.bind(this)
+      this.handleSubmitTask = this.handleSubmitTask.bind(this)
     }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        const task = Object.assign({}, this.state);
-        //
+    componentDidMount() {
+        this.setState({
+            title: this.props.list.list.title,
+            task: {
+                title: "",
+                description: "",
+                status: "",
+                list_id: this.props.list.list.id
+            }
+        })
     }
 
     handleDelete(e){
         e.preventDefault();
-        this.props.destroyList(this.props.list)
+        this.props.destroyList(this.props.list.list)
     }
 
     handleUpdate(e) {
         e.preventDefault();
-        const list = Object.assign({}, this.props.list, {title:this.state.title})
-        console.log(list)
+        const list = Object.assign({}, this.props.list.list, {title:this.state.title})
         this.props.updateList(list)
     }
 
-    update(property) {
-        return e => this.setState({
-            [property]: e.target.value
-        });
+    handleSubmitTask(e) {
+        e.preventDefault();
+        const taskForm = this.state.task;
+        this.props.createTask(taskForm)
+        this.setState({
+            title: this.props.list.list.title,
+            task: {
+                title: "",
+                description: "",
+                status: "",
+                list_id: this.props.list.list.id
+            }
+        })
+    }
+
+    updateTitle(property) {
+        return e => this.setState(prevState=> ({
+            [property]: e.target.value,
+            task:{
+                ...prevState.task,
+            }
+        }));
+    }
+
+    updateTask(property) {
+        return e => this.setState(prevState=> ({
+            title: prevState.title,
+            task:{
+                ...prevState.task,
+                [property]: e.target.value
+            }
+        }))
     }
 
     render() {
         return(
             <div className='list'>
                 <form onSubmit = {this.handleUpdate}>
-                    <input className='title' type="text" value={this.state.title} onChange={this.update('title')}/>   
+                    <input className='title' type="text" value={this.state.title} onChange={this.updateTitle('title')}/>   
                     <input type="submit" style={{display:"none"}}/>
                 </form>
-                <form onSubmit = {this.handleSubmit}>
-                    <input placeholder="enter task"></input>
+                <form className='create-task task' onSubmit = {this.handleSubmitTask}>
+                    <input placeholder="enter task" type="text" value={this.state.task.title} onChange={this.updateTask('title')}></input>
                     <button type="submit">add</button>
                 </form>
-                {/* {Object.values(this.props.list).map((list, i) => (
-                    <Task key={i} task={list}/>
-                ))} */}
+                {Object.values(this.props.list.tasks).reverse().map((task, i) => (
+                    <Task key={i} task={task} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask}/>
+                ))}
                 <button onClick={this.handleDelete}>Delete</button>
             </div>
 

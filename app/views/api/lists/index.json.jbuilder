@@ -1,1 +1,4 @@
-json.lists @lists
+json.lists @lists do |list|
+    json.list list
+    json.tasks list.tasks     
+end
