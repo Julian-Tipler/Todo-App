@@ -842,8 +842,8 @@ var Task = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      title: _this.props.task.title,
-      status: _this.props.task.status
+      title: _this.props.task.task.title,
+      status: _this.props.task.task.status
     };
     _this.deleteTask = _this.deleteTask.bind(_assertThisInitialized(_this));
     _this.updateTask = _this.updateTask.bind(_assertThisInitialized(_this));
@@ -856,13 +856,13 @@ var Task = /*#__PURE__*/function (_React$Component) {
     key: "deleteTask",
     value: function deleteTask(e) {
       e.preventDefault();
-      this.props.deleteTask(this.props.task);
+      this.props.deleteTask(this.props.task.task);
     }
   }, {
     key: "updateTask",
     value: function updateTask(e) {
       e.preventDefault();
-      var task = Object.assign({}, this.props.task, {
+      var task = Object.assign({}, this.props.task.task, {
         title: this.state.title
       });
       this.props.updateTask(task);
@@ -889,7 +889,7 @@ var Task = /*#__PURE__*/function (_React$Component) {
           status: !_this3.state.status
         });
       }, function () {
-        var task = Object.assign({}, _this3.props.task, {
+        var task = Object.assign({}, _this3.props.task.task, {
           status: _this3.state.status
         });
 
@@ -899,7 +899,7 @@ var Task = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "openModal",
     value: function openModal() {
-      this.props.openModal('open', this.props.task.id, this.props.list.list.id);
+      this.props.openModal('open', this.props.task.task.id, this.props.list.list.id);
     }
   }, {
     key: "render",
@@ -909,9 +909,9 @@ var Task = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
         onSubmit: this.updateTask
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "task-title ".concat(this.props.task.status === true ? 'strikethrough' : ""),
+        className: "task-title ".concat(this.props.task.task.status === true ? 'strikethrough' : ""),
         onClick: this.openModal
-      }, this.props.task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+      }, this.props.task.task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
         type: "submit",
         style: {
           display: "none"

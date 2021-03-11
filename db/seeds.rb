@@ -42,7 +42,7 @@ tasks = Task.create([
 
 comments = Comment.create([
     {
-        body:"first!!!",
+        body:"Make sure to take the leash and bags",
         task_id:1
     }
 ])
