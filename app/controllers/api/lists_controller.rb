@@ -1,6 +1,8 @@
 class Api::ListsController < ApplicationController
+    skip_before_action :verify_authenticity_token
+
     def index
-        @lists = List.all
+        @lists = List.all.order("created_at DESC")
         if @lists
             render 'api/lists/index'
         else
@@ -10,8 +12,9 @@ class Api::ListsController < ApplicationController
 
     def create
         @list = List.new(list_params)
+        @lists = List.all.order("created_at DESC")
         if @list.save
-            render 'api/lists/show'
+            render 'api/lists/index'
         else
             render json: @list.errors.full_messages, status:422
         end
@@ -20,11 +23,16 @@ class Api::ListsController < ApplicationController
     #update
 
 
-    #destroy
+    def destroy
+        @list = List.find(params[:id])
+        @list.destroy
+        @lists = List.all.order("created_at DESC")
+        render 'api/lists/index'
+    end
 
 
     private
     def list_params
-        params.require(:list).permit(:title,:color)
+        params.permit(:title,:color)
     end
 end

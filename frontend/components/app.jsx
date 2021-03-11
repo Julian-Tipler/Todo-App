@@ -6,8 +6,11 @@ import ListsContainer from './index/lists_container'
 const App = () => (
   <>
     <ModalList/>
+    <h1 className='main-title'>JULIANS TODO APP</h1>
     <header></header>
-    <ListsContainer/>
+    <div className='content'>
+      <ListsContainer/>
+    </div>
     <footer></footer>
   </>
 );

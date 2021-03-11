@@ -4,7 +4,6 @@ const listsReducer = (state = {}, action) => {
     Object.freeze(state);
     switch (action.type) {
         case RECEIVE_LISTS:
-            console.log(action)
             return Object.assign({}, action.lists)
         default:
             return state;

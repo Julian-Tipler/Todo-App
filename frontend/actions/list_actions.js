@@ -7,8 +7,20 @@ const receiveLists = lists => ({
     lists: lists
 }) 
 
-export const fetchLists = () => dispatch => {
+export const fetchLists = () => dispatch => (
     APIUtil.fetchLists()    
-    .then(lists => dispatch(receiveLists(lists)),
+    .then(lists => dispatch(receiveLists(lists.lists)),
     err=> dispatch(receiveErrors(err)))
-}
+)
+
+export const createList = (listForm) => dispatch => (
+    APIUtil.createList(listForm)
+    .then(lists => dispatch(receiveLists(lists.lists)),
+    err=> dispatch(receiveErrors(err)))
+)
+
+export const destroyList = (list) => dispatch => (
+    APIUtil.destroyList(list)
+    .then(lists => dispatch(receiveLists(lists.lists)),
+    err=> dispatch(receiveErrors(err)))
+)
