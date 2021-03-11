@@ -6,10 +6,11 @@ class List extends React.Component {
     constructor(props) {  
       super(props)
       this.state = {
-        title: ""
+        title: this.props.list.title
       }
       this.handleSubmit = this.handleSubmit.bind(this)
       this.handleDelete = this.handleDelete.bind(this)
+      this.handleUpdate = this.handleUpdate.bind(this)
     }
 
     handleSubmit(e) {
@@ -23,10 +24,26 @@ class List extends React.Component {
         this.props.destroyList(this.props.list)
     }
 
+    handleUpdate(e) {
+        e.preventDefault();
+        const list = Object.assign({}, this.props.list, {title:this.state.title})
+        console.log(list)
+        this.props.updateList(list)
+    }
+
+    update(property) {
+        return e => this.setState({
+            [property]: e.target.value
+        });
+    }
+
     render() {
         return(
             <div className='list'>
-                <div>{this.props.list.title}</div>
+                <form onSubmit = {this.handleUpdate}>
+                    <input className='title' type="text" value={this.state.title} onChange={this.update('title')}/>   
+                    <input type="submit" style={{display:"none"}}/>
+                </form>
                 <form onSubmit = {this.handleSubmit}>
                     <input placeholder="enter task"></input>
                     <button type="submit">add</button>

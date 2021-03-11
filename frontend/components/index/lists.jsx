@@ -44,14 +44,8 @@ class Lists extends React.Component {
         }
         return(
             <div className='lists'>
-                <div className='list'>
-                    <form onSubmit = {this.handleSubmit}>
-                        <input type="text" value={this.state.title} onChange={this.update('title')}/>                    
-                        <button type="submit">add</button>
-                    </form>
-                </div>
                 {Object.values(this.props.lists).map((list, i) => (
-                    <List key={i} list={list} destroyList={this.props.destroyList}/>
+                    <List key={i} list={list} destroyList={this.props.destroyList} updateList={this.props.updateList}/>
                 ))}
             </div>
         )

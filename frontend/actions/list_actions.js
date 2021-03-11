@@ -24,3 +24,9 @@ export const destroyList = (list) => dispatch => (
     .then(lists => dispatch(receiveLists(lists.lists)),
     err=> dispatch(receiveErrors(err)))
 )
+
+export const updateList = (list) => dispatch => (
+    APIUtil.updateList(list)
+    .then(lists => dispatch(receiveLists(lists.lists)),
+    err=> dispatch(receiveErrors(err)))
+)

@@ -13,7 +13,6 @@ export const createList = todoForm => (
 )
 
 export const destroyList = list => {
-    console.log('ping')
     return (
     $.ajax({
         method: 'DELETE',
@@ -21,3 +20,11 @@ export const destroyList = list => {
     })
     )
 }
+
+export const updateList = list => (
+    $.ajax({
+        method: 'PATCH',
+        url: `api/lists/${list.id}`,
+        data: list
+    })
+)

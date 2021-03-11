@@ -1,20 +1,42 @@
 import React from 'react';
 
-class ComponentName extends React.Component {
+class NewListForm extends React.Component {
     constructor(props) {  
       super(props)
       this.state = {
-        form: {
-            title: ""
-        }
+        title: "",
+        color: "yellow"
       }
+      this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    update(property) {
+        return e => this.setState({
+            [property]: e.target.value
+        });
+    }
+
+    handleSubmit(e) {
+      e.preventDefault();
+      let listForm = Object.assign({}, this.state)
+      console.log(this.props)
+      this.props.createList(listForm)
+      this.setState({
+          title: "",
+          color: "yellow"
+      })
     }
     
     render() {
         return(
-            <div></div>
+          <div >
+              <form onSubmit = {this.handleSubmit}>
+                  <input type="text" value={this.state.title} onChange={this.update('title')}/>                    
+                  <button type="submit">add</button>
+              </form>
+          </div>
         )
     }
 }
 
-export default ComponentName
+export default NewListForm
