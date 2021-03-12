@@ -3,8 +3,8 @@ class Api::TasksController < ApplicationController
 
     def create
         @task = Task.new(task_params)
-        @lists = List.all.order("created_at DESC")
         if @task.save
+            @lists = List.all.order("created_at DESC")
             render 'api/lists/index'
         else
             render json: @task.errors.full_messages, status:422
@@ -27,6 +27,16 @@ class Api::TasksController < ApplicationController
         @lists = List.all.order("created_at DESC")
         render 'api/lists/index'
     end
+
+    def show
+        @task = Task.find(params[:id])
+        if @task
+            render 'api/tasks/show'
+        else
+            render json: @task.errors.full_messages, status:422
+        end
+    end
+
 
     private
     def task_params

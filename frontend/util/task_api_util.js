@@ -20,3 +20,10 @@ export const updateTask = task => (
         data: task
     })
 )
+
+export const fetchTask = task_id => (
+    $.ajax({
+        method: 'GET',
+        url: `api/tasks/${task_id}`
+    })
+)

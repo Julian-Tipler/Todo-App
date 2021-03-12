@@ -4,8 +4,8 @@ class Task extends React.Component {
     constructor(props) {  
       super(props)
       this.state = {
-            title: this.props.task.task.title,
-            status: this.props.task.task.status
+            title: this.props.task.title,
+            status: this.props.task.status
         }
       this.deleteTask = this.deleteTask.bind(this)
       this.updateTask = this.updateTask.bind(this)
@@ -15,12 +15,12 @@ class Task extends React.Component {
 
     deleteTask(e) {
         e.preventDefault();
-        this.props.deleteTask(this.props.task.task)
+        this.props.deleteTask(this.props.task)
     }
 
     updateTask(e) {
         e.preventDefault();
-        const task = Object.assign({}, this.props.task.task, {title:this.state.title})
+        const task = Object.assign({}, this.props.task, {title:this.state.title})
         this.props.updateTask(task)
     }
     
@@ -38,14 +38,14 @@ class Task extends React.Component {
             status: !this.state.status,
         }),
         ()=> {
-            const task = Object.assign({}, this.props.task.task, {status:this.state.status})
+            const task = Object.assign({}, this.props.task, {status:this.state.status})
             this.props.updateTask(task)
         });
 
     }
 
     openModal(){
-        this.props.openModal('open',this.props.task.task.id,this.props.list.list.id)
+        this.props.openModal('open',this.props.task.id,this.props.list.id)
     }
 
     render() {
@@ -53,7 +53,7 @@ class Task extends React.Component {
         return(
             <div className='task' >
                 <form onSubmit = {this.updateTask}>
-                    <div className={`task-title ${this.props.task.task.status===true ? 'strikethrough' : ""}`} onClick={this.openModal}>{this.props.task.task.title}</div>   
+                    <div className={`task-title ${this.props.task.status===true ? 'strikethrough' : ""}`} onClick={this.openModal}>{this.props.task.title}</div>   
                     <input type="submit" style={{display:"none"}}/>
                 </form>
                 <div>

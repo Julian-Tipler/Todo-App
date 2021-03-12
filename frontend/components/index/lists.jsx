@@ -43,10 +43,12 @@ class Lists extends React.Component {
                 <div></div>
             )
         }
+        console.log('pre-map',this.props.lists)
         return(
             <div className='lists'>
                 {Object.values(this.props.lists).map((list, i) => {
-                   return <List key={i} list={list} destroyList={this.props.destroyList} updateList={this.props.updateList} createTask={this.props.createTask} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask} openModal={this.props.openModal} closeModal={this.props.closeModal}/>
+                // console.log('list from map',list)
+                   return <List key={i} index={i} list={list} destroyList={this.props.destroyList} updateList={this.props.updateList} createTask={this.props.createTask} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask} openModal={this.props.openModal} closeModal={this.props.closeModal}/>
                  })}
             </div>
         )

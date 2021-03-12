@@ -21,20 +21,20 @@ lists = List.create([
 
 tasks = Task.create([
     {
-        title:'walk the doge',
-        description:'take the doge to the park and to the beach',
+        title:'Walk the dog',
+        description:'Take the dog to the park and to the beach',
         status:false,
         list_id:1
     },
     {
-        title:'run the other doge',
-        description:'take the doge to the park and to the beach',
+        title:'Run the other dog',
+        description:'He is faster',
         status:false,
         list_id:1
     },
     {
-        title:'walk the cate',
-        description:'take the cate to the house and to the house again',
+        title:'Walk the cat',
+        description:'Take the cat to the house and to the house again',
         status:false,
         list_id:2
     }

@@ -10,15 +10,35 @@
 
 .modal-child {
   position: absolute;
-  color: white;
+  background-color: white;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 200px;
-  width: 200px;
+  height: 50vh;
+  width: 50vw;
   font-size: 30px;
   font-family:Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   font-weight: 600;
   font-size: 15px;
   padding-bottom: 20px; 
+  border-radius: 10px;
+}
+
+.modal-child-main {
+  padding: 50px;
+}
+
+.modal-child-main>*{
+  margin-bottom: 40px;
+}
+
+.modal-title {
+
+}
+
+.modal-body {
+  border: 1px solid gray;
+  border-radius: 5px;
+  font-weight: 300;
+  padding: 15px
 }

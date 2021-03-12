@@ -1,18 +1,18 @@
 import React from 'react';
 import { closeModal } from '../../actions/modal_actions'
+import { fetchTask } from '../../actions/task_actions'
+import { createComment } from '../../actions/comment_actions'
 import { connect } from 'react-redux'
 import ModalTask from './modal_task'
 
-function Modal({modal, lists, closeModal}) {
+function Modal({modal, closeModal, fetchTask, task, createComment}) {
     if (!modal) {
         return null
     }
-    console.log(modal)
     var component;
     switch(modal.modal) {
         case 'open':
-            console.log(lists)
-            component = <ModalTask id={modal.id} list_id={modal.list_id}/>
+            component = <ModalTask task_id={modal.task_id} list_id={modal.list_id} fetchTask={fetchTask} task={task} createComment={createComment}/>
             break;
         case 'close':
             return null 
@@ -36,13 +36,15 @@ function Modal({modal, lists, closeModal}) {
 const mapStateToProps = state => {
     return {
         modal: state.modal,
-        lists: state.lists
+        task: state.task
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        closeModal: () => dispatch(closeModal())
+        closeModal: () => dispatch(closeModal()),
+        fetchTask: (task_id)=> dispatch(fetchTask(task_id)),
+        createComment: (commentForm)=> dispatch(createComment(commentForm))
     };
 };
 

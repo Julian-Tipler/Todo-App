@@ -103,6 +103,41 @@ function _setPrototypeOf(o, p) {
 
 /***/ }),
 
+/***/ "./frontend/actions/comment_actions.js":
+/*!*********************************************!*\
+  !*** ./frontend/actions/comment_actions.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RECEIVE_LISTS": () => (/* binding */ RECEIVE_LISTS),
+/* harmony export */   "createComment": () => (/* binding */ createComment)
+/* harmony export */ });
+/* harmony import */ var _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/comment_api_util */ "./frontend/util/comment_api_util.js");
+
+var RECEIVE_LISTS = 'RECEIVE_LISTS';
+
+var receiveLists = function receiveLists(lists) {
+  return {
+    type: RECEIVE_LISTS,
+    lists: lists
+  };
+};
+
+var createComment = function createComment(commentForm) {
+  return function (dispatch) {
+    _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__.createComment(commentForm).then(function (lists) {
+      return dispatch(receiveLists(lists.lists));
+    }, function (err) {
+      return dispatch(receiveErrors(err));
+    });
+  };
+};
+
+/***/ }),
+
 /***/ "./frontend/actions/list_actions.js":
 /*!******************************************!*\
   !*** ./frontend/actions/list_actions.js ***!
@@ -179,11 +214,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "OPEN_MODAL": () => (/* binding */ OPEN_MODAL),
 /* harmony export */   "CLOSE_MODAL": () => (/* binding */ CLOSE_MODAL),
+/* harmony export */   "RECEIVE_TASK": () => (/* binding */ RECEIVE_TASK),
 /* harmony export */   "openModal": () => (/* binding */ openModal),
 /* harmony export */   "closeModal": () => (/* binding */ closeModal)
 /* harmony export */ });
 var OPEN_MODAL = 'OPEN_MODAL';
 var CLOSE_MODAL = 'CLOSE_MODAL';
+var RECEIVE_TASK = 'RECEIVE_TASK';
 var openModal = function openModal(modal, id, list_id) {
   return {
     type: OPEN_MODAL,
@@ -210,18 +247,28 @@ var closeModal = function closeModal() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "RECEIVE_LISTS": () => (/* binding */ RECEIVE_LISTS),
+/* harmony export */   "RECEIVE_TASK": () => (/* binding */ RECEIVE_TASK),
 /* harmony export */   "createTask": () => (/* binding */ createTask),
 /* harmony export */   "deleteTask": () => (/* binding */ deleteTask),
-/* harmony export */   "updateTask": () => (/* binding */ updateTask)
+/* harmony export */   "updateTask": () => (/* binding */ updateTask),
+/* harmony export */   "fetchTask": () => (/* binding */ fetchTask)
 /* harmony export */ });
 /* harmony import */ var _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/task_api_util */ "./frontend/util/task_api_util.js");
 
 var RECEIVE_LISTS = 'RECEIVE_LISTS';
+var RECEIVE_TASK = 'RECEIVE_TASK';
 
 var receiveLists = function receiveLists(lists) {
   return {
     type: RECEIVE_LISTS,
     lists: lists
+  };
+};
+
+var receiveTask = function receiveTask(task) {
+  return {
+    type: RECEIVE_TASK,
+    task: task
   };
 };
 
@@ -252,6 +299,15 @@ var updateTask = function updateTask(task) {
     });
   };
 };
+var fetchTask = function fetchTask(task_id) {
+  return function (dispatch) {
+    _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.fetchTask(task_id).then(function (task) {
+      return dispatch(receiveTask(task));
+    }, function (err) {
+      return dispatch(receiveErrors(err));
+    });
+  };
+};
 
 /***/ }),
 
@@ -277,7 +333,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var App = function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_modal_modal__WEBPACK_IMPORTED_MODULE_1__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", {
     className: "main-title"
   }, "JULIANS TODO APP"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "content"
@@ -349,7 +405,7 @@ var List = /*#__PURE__*/function (_React$Component) {
         title: "",
         description: "",
         status: false,
-        list_id: _this.props.list.list.id
+        list_id: 1
       }
     };
     _this.handleDelete = _this.handleDelete.bind(_assertThisInitialized(_this));
@@ -360,22 +416,27 @@ var List = /*#__PURE__*/function (_React$Component) {
 
   _createClass(List, [{
     key: "componentDidMount",
-    value: function componentDidMount() {
-      this.setState({
-        title: this.props.list.list.title
-      });
+    value: function componentDidMount() {// console.log('props list id', this.props.list.id)
+      // console.log('props index', this.props.index)
+      // this.setState({
+      //     task: {
+      //         ...this.state.task,
+      //         list_id:this.props.list.id +1
+      //     },
+      //     title: this.props.list.title,
+      // })
     }
   }, {
     key: "handleDelete",
     value: function handleDelete(e) {
       e.preventDefault();
-      this.props.destroyList(this.props.list.list);
+      this.props.destroyList(this.props.list);
     }
   }, {
     key: "handleUpdate",
     value: function handleUpdate(e) {
       e.preventDefault();
-      var list = Object.assign({}, this.props.list.list, {
+      var list = Object.assign({}, this.props.list, {
         title: this.state.title
       });
       this.props.updateList(list);
@@ -384,15 +445,19 @@ var List = /*#__PURE__*/function (_React$Component) {
     key: "handleSubmitTask",
     value: function handleSubmitTask(e) {
       e.preventDefault();
+      console.log(this.props.list.id); // console.log('state', this.state )
+      // console.log('pre-submit',this.state.task.list_id)
+
       var taskForm = this.state.task;
+      console.log(taskForm);
       this.props.createTask(taskForm);
       this.setState({
-        title: this.props.list.list.title,
+        title: this.props.list.title,
         task: {
           title: "",
           description: "",
           status: false,
-          list_id: this.props.list.list.id
+          list_id: 1
         }
       });
     }
@@ -424,14 +489,14 @@ var List = /*#__PURE__*/function (_React$Component) {
     value: function render() {
       var _this4 = this;
 
-      console.log(this.state.task);
+      console.log(this.state);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "list"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: "list ".concat(this.props.index)
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.props.index), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "title-delete"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "title"
-      }, this.props.list.list.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+      }, this.props.list.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
         onClick: this.handleDelete
       }, "Delete List")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
         className: "create-task task",
@@ -566,11 +631,14 @@ var Lists = /*#__PURE__*/function (_React$Component) {
         );
       }
 
+      console.log('pre-map', this.props.lists);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "lists"
       }, Object.values(this.props.lists).map(function (list, i) {
+        // console.log('list from map',list)
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_list__WEBPACK_IMPORTED_MODULE_1__.default, {
           key: i,
+          index: i,
           list: list,
           destroyList: _this3.props.destroyList,
           updateList: _this3.props.updateList,
@@ -842,8 +910,8 @@ var Task = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      title: _this.props.task.task.title,
-      status: _this.props.task.task.status
+      title: _this.props.task.title,
+      status: _this.props.task.status
     };
     _this.deleteTask = _this.deleteTask.bind(_assertThisInitialized(_this));
     _this.updateTask = _this.updateTask.bind(_assertThisInitialized(_this));
@@ -856,13 +924,13 @@ var Task = /*#__PURE__*/function (_React$Component) {
     key: "deleteTask",
     value: function deleteTask(e) {
       e.preventDefault();
-      this.props.deleteTask(this.props.task.task);
+      this.props.deleteTask(this.props.task);
     }
   }, {
     key: "updateTask",
     value: function updateTask(e) {
       e.preventDefault();
-      var task = Object.assign({}, this.props.task.task, {
+      var task = Object.assign({}, this.props.task, {
         title: this.state.title
       });
       this.props.updateTask(task);
@@ -889,7 +957,7 @@ var Task = /*#__PURE__*/function (_React$Component) {
           status: !_this3.state.status
         });
       }, function () {
-        var task = Object.assign({}, _this3.props.task.task, {
+        var task = Object.assign({}, _this3.props.task, {
           status: _this3.state.status
         });
 
@@ -899,7 +967,7 @@ var Task = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "openModal",
     value: function openModal() {
-      this.props.openModal('open', this.props.task.task.id, this.props.list.list.id);
+      this.props.openModal('open', this.props.task.id, this.props.list.id);
     }
   }, {
     key: "render",
@@ -909,9 +977,9 @@ var Task = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
         onSubmit: this.updateTask
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "task-title ".concat(this.props.task.task.status === true ? 'strikethrough' : ""),
+        className: "task-title ".concat(this.props.task.status === true ? 'strikethrough' : ""),
         onClick: this.openModal
-      }, this.props.task.task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+      }, this.props.task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
         type: "submit",
         style: {
           display: "none"
@@ -944,8 +1012,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _actions_modal_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/modal_actions */ "./frontend/actions/modal_actions.js");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _modal_task__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modal_task */ "./frontend/components/modal/modal_task.jsx");
+/* harmony import */ var _actions_task_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/task_actions */ "./frontend/actions/task_actions.js");
+/* harmony import */ var _actions_comment_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/comment_actions */ "./frontend/actions/comment_actions.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _modal_task__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modal_task */ "./frontend/components/modal/modal_task.jsx");
+
+
 
 
 
@@ -953,22 +1025,25 @@ __webpack_require__.r(__webpack_exports__);
 
 function Modal(_ref) {
   var modal = _ref.modal,
-      lists = _ref.lists,
-      closeModal = _ref.closeModal;
+      closeModal = _ref.closeModal,
+      fetchTask = _ref.fetchTask,
+      task = _ref.task,
+      createComment = _ref.createComment;
 
   if (!modal) {
     return null;
   }
 
-  console.log(modal);
   var component;
 
   switch (modal.modal) {
     case 'open':
-      console.log(lists);
-      component = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_modal_task__WEBPACK_IMPORTED_MODULE_3__.default, {
-        id: modal.id,
-        list_id: modal.list_id
+      component = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_modal_task__WEBPACK_IMPORTED_MODULE_5__.default, {
+        task_id: modal.task_id,
+        list_id: modal.list_id,
+        fetchTask: fetchTask,
+        task: task,
+        createComment: createComment
       });
       break;
 
@@ -994,7 +1069,7 @@ function Modal(_ref) {
 var mapStateToProps = function mapStateToProps(state) {
   return {
     modal: state.modal,
-    lists: state.lists
+    task: state.task
   };
 };
 
@@ -1002,11 +1077,17 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     closeModal: function closeModal() {
       return dispatch((0,_actions_modal_actions__WEBPACK_IMPORTED_MODULE_1__.closeModal)());
+    },
+    fetchTask: function fetchTask(task_id) {
+      return dispatch((0,_actions_task_actions__WEBPACK_IMPORTED_MODULE_2__.fetchTask)(task_id));
+    },
+    createComment: function createComment(commentForm) {
+      return dispatch((0,_actions_comment_actions__WEBPACK_IMPORTED_MODULE_3__.createComment)(commentForm));
     }
   };
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_2__.connect)(mapStateToProps, mapDispatchToProps)(Modal));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_4__.connect)(mapStateToProps, mapDispatchToProps)(Modal));
 
 /***/ }),
 
@@ -1023,6 +1104,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1046,31 +1129,82 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var ComponentName = /*#__PURE__*/function (_React$Component) {
-  _inherits(ComponentName, _React$Component);
+var ModalTask = /*#__PURE__*/function (_React$Component) {
+  _inherits(ModalTask, _React$Component);
 
-  var _super = _createSuper(ComponentName);
+  var _super = _createSuper(ModalTask);
 
-  function ComponentName() {
-    _classCallCheck(this, ComponentName);
+  function ModalTask(props) {
+    var _this;
 
-    return _super.apply(this, arguments);
+    _classCallCheck(this, ModalTask);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      body: ""
+    };
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
-  _createClass(ComponentName, [{
+  _createClass(ModalTask, [{
     key: "componentDidMount",
-    value: function componentDidMount() {}
+    value: function componentDidMount() {
+      this.props.fetchTask(this.props.task_id);
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      var commentForm = Object.assign({}, this.state);
+      this.props.createComment(commentForm);
+      this.setState({
+        body: ""
+      });
+    }
+  }, {
+    key: "update",
+    value: function update(property) {
+      var _this2 = this;
+
+      return function (e) {
+        return _this2.setState(_defineProperty({}, property, e.target.value));
+      };
+    }
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null);
+      if (!Object.keys(this.props.task).length) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, "loading...");
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: "modal-child-main"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: "modal-title description"
+      }, "Description:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: "modal-body description-body"
+      }, this.props.task.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: "modal-title comments"
+      }, "Comments:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: "modal-body comments-body"
+      }, this.props.task.comments.map(function (comment) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, comment.body);
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
+        onSubmit: this.handleSubmit
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+        type: "text",
+        value: this.state.body,
+        onChange: this.update('body')
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+        type: "submit"
+      }, "Submit Comment")));
     }
   }]);
 
-  return ComponentName;
+  return ModalTask;
 }(react__WEBPACK_IMPORTED_MODULE_0__.Component);
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ComponentName);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ModalTask); // this.props.task.comments.map(comment=> {
+//                     return <div>{comment}</div>
+//                 }) : <div>no comments</div>}
 
 /***/ }),
 
@@ -1154,7 +1288,7 @@ __webpack_require__.r(__webpack_exports__);
 var modalReducer = function modalReducer() {
   var oldState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
     modal: null,
-    id: null,
+    task_id: null,
     list_id: null
   };
   var action = arguments.length > 1 ? arguments[1] : undefined;
@@ -1164,7 +1298,7 @@ var modalReducer = function modalReducer() {
     case _actions_modal_actions__WEBPACK_IMPORTED_MODULE_0__.OPEN_MODAL:
       return {
         modal: action.modal,
-        id: action.id,
+        task_id: action.id,
         list_id: action.list_id
       };
 
@@ -1191,17 +1325,52 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _lists_reducer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lists_reducer */ "./frontend/reducers/lists_reducer.js");
 /* harmony import */ var _modal_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal_reducer */ "./frontend/reducers/modal_reducer.js");
+/* harmony import */ var _task_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./task_reducer */ "./frontend/reducers/task_reducer.js");
 
 
 
-var rootReducer = (0,redux__WEBPACK_IMPORTED_MODULE_2__.combineReducers)({
+
+var rootReducer = (0,redux__WEBPACK_IMPORTED_MODULE_3__.combineReducers)({
   lists: _lists_reducer__WEBPACK_IMPORTED_MODULE_0__.default,
-  modal: _modal_reducer__WEBPACK_IMPORTED_MODULE_1__.default
+  modal: _modal_reducer__WEBPACK_IMPORTED_MODULE_1__.default,
+  task: _task_reducer__WEBPACK_IMPORTED_MODULE_2__.default
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (rootReducer);
+
+/***/ }),
+
+/***/ "./frontend/reducers/task_reducer.js":
+/*!*******************************************!*\
+  !*** ./frontend/reducers/task_reducer.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _actions_task_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/task_actions */ "./frontend/actions/task_actions.js");
+
+
+var taskReducer = function taskReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+  Object.freeze(state);
+
+  switch (action.type) {
+    case _actions_task_actions__WEBPACK_IMPORTED_MODULE_0__.RECEIVE_TASK:
+      return Object.assign({}, action.task);
+
+    default:
+      return state;
+  }
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (taskReducer);
 
 /***/ }),
 
@@ -1232,6 +1401,27 @@ var configureStore = function configureStore() {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (configureStore);
+
+/***/ }),
+
+/***/ "./frontend/util/comment_api_util.js":
+/*!*******************************************!*\
+  !*** ./frontend/util/comment_api_util.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createComment": () => (/* binding */ createComment)
+/* harmony export */ });
+var createComment = function createComment(commentForm) {
+  return $.ajax({
+    method: 'POST',
+    url: '/api/comments',
+    data: commentForm
+  });
+};
 
 /***/ }),
 
@@ -1288,7 +1478,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "createTask": () => (/* binding */ createTask),
 /* harmony export */   "deleteTask": () => (/* binding */ deleteTask),
-/* harmony export */   "updateTask": () => (/* binding */ updateTask)
+/* harmony export */   "updateTask": () => (/* binding */ updateTask),
+/* harmony export */   "fetchTask": () => (/* binding */ fetchTask)
 /* harmony export */ });
 var createTask = function createTask(taskForm) {
   return $.ajax({
@@ -1308,6 +1499,12 @@ var updateTask = function updateTask(task) {
     method: 'PATCH',
     url: "api/tasks/".concat(task.id),
     data: task
+  });
+};
+var fetchTask = function fetchTask(task_id) {
+  return $.ajax({
+    method: 'GET',
+    url: "api/tasks/".concat(task_id)
   });
 };
 

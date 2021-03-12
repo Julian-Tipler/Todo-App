@@ -12,8 +12,8 @@ class Api::ListsController < ApplicationController
 
     def create
         @list = List.new(list_params)
-        @lists = List.all.order("created_at DESC")
         if @list.save
+            @lists = List.all.order("created_at DESC")
             render 'api/lists/index'
         else
             render json: @list.errors.full_messages, status:422
@@ -38,6 +38,7 @@ class Api::ListsController < ApplicationController
         @lists = List.all.order("created_at DESC")
         render 'api/lists/index'
     end
+
 
 
     private

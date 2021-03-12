@@ -1,5 +1,6 @@
 export const OPEN_MODAL = 'OPEN_MODAL'
 export const CLOSE_MODAL = 'CLOSE_MODAL'
+export const RECEIVE_TASK = 'RECEIVE_TASK'
 
 export const openModal = (modal,id,list_id) => {
     return {
@@ -15,3 +16,4 @@ export const closeModal = () => {
         type: CLOSE_MODAL
     };
 };
+
