@@ -112,24 +112,24 @@ function _setPrototypeOf(o, p) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "RECEIVE_LISTS": () => (/* binding */ RECEIVE_LISTS),
+/* harmony export */   "RECEIVE_TASK": () => (/* binding */ RECEIVE_TASK),
 /* harmony export */   "createComment": () => (/* binding */ createComment)
 /* harmony export */ });
 /* harmony import */ var _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/comment_api_util */ "./frontend/util/comment_api_util.js");
 
-var RECEIVE_LISTS = 'RECEIVE_LISTS';
+var RECEIVE_TASK = 'RECEIVE_TASK';
 
-var receiveLists = function receiveLists(lists) {
+var receiveTask = function receiveTask(task) {
   return {
-    type: RECEIVE_LISTS,
-    lists: lists
+    type: RECEIVE_TASK,
+    task: task
   };
 };
 
 var createComment = function createComment(commentForm) {
   return function (dispatch) {
-    _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__.createComment(commentForm).then(function (lists) {
-      return dispatch(receiveLists(lists.lists));
+    return _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__.createComment(commentForm).then(function (task) {
+      return dispatch(receiveTask(task));
     }, function (err) {
       return dispatch(receiveErrors(err));
     });
@@ -274,7 +274,7 @@ var receiveTask = function receiveTask(task) {
 
 var createTask = function createTask(taskForm) {
   return function (dispatch) {
-    _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.createTask(taskForm).then(function (lists) {
+    return _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.createTask(taskForm).then(function (lists) {
       return dispatch(receiveLists(lists.lists));
     }, function (err) {
       return dispatch(receiveErrors(err));
@@ -333,7 +333,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var App = function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_modal_modal__WEBPACK_IMPORTED_MODULE_1__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", {
     className: "main-title"
   }, "JULIANS TODO APP"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "content"
@@ -353,7 +353,7 @@ var App = function App() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (/* binding */ List)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./task */ "./frontend/components/index/task.jsx");
@@ -388,8 +388,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var List = /*#__PURE__*/function (_React$Component) {
-  _inherits(List, _React$Component);
+var List = /*#__PURE__*/function (_Component) {
+  _inherits(List, _Component);
 
   var _super = _createSuper(List);
 
@@ -401,30 +401,42 @@ var List = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this, props);
     _this.state = {
       title: "",
-      task: {
-        title: "",
-        description: "",
-        status: false,
-        list_id: 1
-      }
+      description: "",
+      status: false,
+      list_id: -1
     };
-    _this.handleDelete = _this.handleDelete.bind(_assertThisInitialized(_this));
-    _this.handleUpdate = _this.handleUpdate.bind(_assertThisInitialized(_this));
     _this.handleSubmitTask = _this.handleSubmitTask.bind(_assertThisInitialized(_this));
+    _this.handleDelete = _this.handleDelete.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(List, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {// console.log('props list id', this.props.list.id)
-      // console.log('props index', this.props.index)
-      // this.setState({
-      //     task: {
-      //         ...this.state.task,
-      //         list_id:this.props.list.id +1
-      //     },
-      //     title: this.props.list.title,
-      // })
+    key: "updateTask",
+    value: function updateTask(property) {
+      var _this2 = this;
+
+      return function (e) {
+        return _this2.setState(function (prevState) {
+          return _objectSpread(_objectSpread({}, prevState.task), {}, _defineProperty({}, property, e.target.value));
+        });
+      };
+    }
+  }, {
+    key: "handleSubmitTask",
+    value: function handleSubmitTask(e) {
+      var _this3 = this;
+
+      e.preventDefault();
+      var task = Object.assign({}, this.state, {
+        list_id: this.props.list.id
+      });
+      this.props.createTask(task).then(function () {
+        return _this3.setState({
+          title: "",
+          description: "",
+          status: false
+        });
+      });
     }
   }, {
     key: "handleDelete",
@@ -433,78 +445,18 @@ var List = /*#__PURE__*/function (_React$Component) {
       this.props.destroyList(this.props.list);
     }
   }, {
-    key: "handleUpdate",
-    value: function handleUpdate(e) {
-      e.preventDefault();
-      var list = Object.assign({}, this.props.list, {
-        title: this.state.title
-      });
-      this.props.updateList(list);
-    }
-  }, {
-    key: "handleSubmitTask",
-    value: function handleSubmitTask(e) {
-      e.preventDefault();
-      console.log(this.props.list.id); // console.log('state', this.state )
-      // console.log('pre-submit',this.state.task.list_id)
-
-      var taskForm = this.state.task;
-      console.log(taskForm);
-      this.props.createTask(taskForm);
-      this.setState({
-        title: this.props.list.title,
-        task: {
-          title: "",
-          description: "",
-          status: false,
-          list_id: 1
-        }
-      });
-    }
-  }, {
-    key: "updateTitle",
-    value: function updateTitle(property) {
-      var _this2 = this;
-
-      return function (e) {
-        return _this2.setState(_defineProperty({}, property, e.target.value));
-      };
-    }
-  }, {
-    key: "updateTask",
-    value: function updateTask(property) {
-      var _this3 = this;
-
-      return function (e) {
-        return _this3.setState(function (prevState) {
-          return {
-            title: prevState.title,
-            task: _objectSpread(_objectSpread({}, prevState.task), {}, _defineProperty({}, property, e.target.value))
-          };
-        });
-      };
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this4 = this;
 
-      console.log(this.state);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "list ".concat(this.props.index)
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.props.index), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "title-delete"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "title"
-      }, this.props.list.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-        onClick: this.handleDelete
-      }, "Delete List")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
-        className: "create-task task",
+        className: "list"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.props.list.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
         onSubmit: this.handleSubmitTask
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
         placeholder: "enter task",
         type: "text",
-        value: this.state.task.title,
+        value: this.state.title,
         onChange: this.updateTask('title')
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
         type: "submit"
@@ -518,14 +470,16 @@ var List = /*#__PURE__*/function (_React$Component) {
           openModal: _this4.props.openModal,
           closeModal: _this4.props.closeModal
         });
-      }));
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+        onClick: this.handleDelete
+      }, "Delete"));
     }
   }]);
 
   return List;
 }(react__WEBPACK_IMPORTED_MODULE_0__.Component);
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (List);
+
 
 /***/ }),
 
@@ -619,19 +573,9 @@ var Lists = /*#__PURE__*/function (_React$Component) {
       var _this3 = this;
 
       if (Object.values(this.props.lists).length <= 0) {
-        return (
-          /*#__PURE__*/
-          // <div className='lists'>
-          //     <form onSubmit = {this.handleSubmit}>
-          //         <input type="text" value={this.state.title} onChange={this.update('title')}/>                    
-          //         <button type="submit">add</button>
-          //     </form>
-          // </div>
-          react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null)
-        );
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null);
       }
 
-      console.log('pre-map', this.props.lists);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "lists"
       }, Object.values(this.props.lists).map(function (list, i) {
@@ -1054,15 +998,20 @@ function Modal(_ref) {
       return null;
   }
 
-  var closeAction = function closeAction() {
+  var closeAction = function closeAction(e) {
     closeModal();
+  };
+
+  var childClick = function childClick(e) {
+    e.stopPropagation();
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "modal-background",
     onClick: closeAction
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "modal-child"
+    className: "modal-child",
+    onClick: childClick
   }, component));
 }
 
@@ -1141,7 +1090,9 @@ var ModalTask = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      body: ""
+      description: "",
+      body: "",
+      task_id: -1
     };
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     return _this;
@@ -1155,20 +1106,29 @@ var ModalTask = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "handleSubmit",
     value: function handleSubmit(e) {
+      var _this2 = this;
+
       e.preventDefault();
-      var commentForm = Object.assign({}, this.state);
-      this.props.createComment(commentForm);
-      this.setState({
-        body: ""
+      var commentForm = Object.assign({}, {
+        body: this.state.body
+      }, {
+        task_id: this.props.task.id
+      });
+      this.props.createComment(commentForm).then(function () {
+        _this2.setState({
+          description: "",
+          body: "",
+          task_id: -1
+        });
       });
     }
   }, {
     key: "update",
     value: function update(property) {
-      var _this2 = this;
+      var _this3 = this;
 
       return function (e) {
-        return _this2.setState(_defineProperty({}, property, e.target.value));
+        return _this3.setState(_defineProperty({}, property, e.target.value));
       };
     }
   }, {
@@ -1185,15 +1145,17 @@ var ModalTask = /*#__PURE__*/function (_React$Component) {
         className: "modal-title comments"
       }, "Comments:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "modal-body comments-body"
-      }, this.props.task.comments.map(function (comment) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, comment.body);
+      }, this.props.task.comments.map(function (comment, i) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+          key: i
+        }, comment.body);
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
         onSubmit: this.handleSubmit
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
         type: "text",
         value: this.state.body,
         onChange: this.update('body')
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
         type: "submit"
       }, "Submit Comment")));
     }

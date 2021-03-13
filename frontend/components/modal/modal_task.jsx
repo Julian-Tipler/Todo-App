@@ -3,8 +3,10 @@ import React from 'react';
 class ModalTask extends React.Component {
     constructor(props){
         super(props)
-        this.state={
-            body: ""
+        this.state= {
+            description: "",
+            body: "",
+            task_id: -1
         }
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -15,11 +17,15 @@ class ModalTask extends React.Component {
 
     handleSubmit(e) {
       e.preventDefault();
-      let commentForm = Object.assign({}, this.state)
-      this.props.createComment(commentForm)
-      this.setState({
-          body: ""
+      const commentForm = Object.assign({}, {body:this.state.body}, {task_id:this.props.task.id})
+      this.props.createComment(commentForm).then(()=> {
+        this.setState({
+        description: "",
+        body: "",
+        task_id: -1
+        })
       })
+    
     }
 
     update(property) {
@@ -36,13 +42,13 @@ class ModalTask extends React.Component {
                 <div className='modal-body description-body'>{this.props.task.description}</div>
                 <div className='modal-title comments'>Comments:</div>
                 <div className='modal-body comments-body'>
-                    {this.props.task.comments.map(comment=> {
-                    return <div>{comment.body}</div>
+                    {this.props.task.comments.map((comment,i)=> {
+                    return <div key={i}>{comment.body}</div>
                     })}
                 </div>
                 <form onSubmit={this.handleSubmit}>
-                    <input type="text" value={this.state.body} onChange={this.update('body')}></input>
-                    <input type="submit">Submit Comment</input>
+                    <input type="text" value={this.state.body} onChange={this.update('body')}/>
+                    <button type="submit">Submit Comment</button>
                 </form>
             </div>
         )

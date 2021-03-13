@@ -14,11 +14,11 @@ const receiveTask = (task) => ({
 })
 
 
-export const createTask = (taskForm) => dispatch => {
+export const createTask = (taskForm) => dispatch => (
     APIUtil.createTask(taskForm)
     .then(lists => dispatch(receiveLists(lists.lists)),
     err=> dispatch(receiveErrors(err)))
-}
+)
 
 export const deleteTask = task => dispatch => {
     APIUtil.deleteTask(task)

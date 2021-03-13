@@ -34,7 +34,7 @@ tasks = Task.create([
     },
     {
         title:'Walk the cat',
-        description:'Take the cat to the house and to the house again',
+        description:'Take the cat to the house',
         status:false,
         list_id:2
     }

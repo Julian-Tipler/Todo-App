@@ -1,14 +1,13 @@
 import * as APIUtil from '../util/comment_api_util'
+export const RECEIVE_TASK = 'RECEIVE_TASK'
 
-export const RECEIVE_LISTS = 'RECEIVE_LISTS'
+const receiveTask = (task) => ({
+    type: RECEIVE_TASK,
+    task
+})
 
-const receiveLists = lists => ({
-    type: RECEIVE_LISTS,
-    lists: lists
-}) 
-
-export const createComment = (commentForm) => dispatch => {
+export const createComment = (commentForm) => dispatch => (
     APIUtil.createComment(commentForm)
-    .then(lists => dispatch(receiveLists(lists.lists)),
+    .then(task => dispatch(receiveTask(task)),
     err=> dispatch(receiveErrors(err)))
-}
+)

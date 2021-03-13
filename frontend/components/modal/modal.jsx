@@ -5,7 +5,7 @@ import { createComment } from '../../actions/comment_actions'
 import { connect } from 'react-redux'
 import ModalTask from './modal_task'
 
-function Modal({modal, closeModal, fetchTask, task, createComment}) {
+function Modal({modal, closeModal, fetchTask, task, createComment }) {
     if (!modal) {
         return null
     }
@@ -20,13 +20,17 @@ function Modal({modal, closeModal, fetchTask, task, createComment}) {
             return null;
     }
 
-    const closeAction = ()=> {
+    const closeAction = (e)=> {
         closeModal()
+    }
+
+    const childClick = (e)=> {
+        e.stopPropagation()
     }
 
     return (
         <div className='modal-background' onClick={closeAction}>
-            <div className="modal-child" >
+            <div className="modal-child" onClick={childClick}>
                 {component}
             </div>
         </div>
