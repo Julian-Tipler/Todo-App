@@ -7,7 +7,7 @@ import NewListFormContainer from './index/new_list_form_container'
 const App = () => (
   <>
     <Modal/>
-    <h1 className='main-title'>JULIANS TODO APP</h1>
+    <h1 className='main-title'>TODO APP</h1>
     <header></header>
     <div className='content'>
       <NewListFormContainer/>

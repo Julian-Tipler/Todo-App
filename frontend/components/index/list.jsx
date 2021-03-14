@@ -43,17 +43,17 @@ export default class List extends Component {
     render() {
         return (
             <div className='list'>
-                <div>{this.props.list.title}</div>
+                <h3>{this.props.list.title}</h3>
 
                 <form onSubmit={this.handleSubmitTask}>
                     <input placeholder="enter task" type="text" value={this.state.title} onChange={this.updateTask('title')}/>
-                    <button type="submit">add</button>
+                    <button style={{display: 'none'}} type="submit">add</button>
                 </form>
 
                 {Object.values(this.props.list.tasks).reverse().map((task, i) => (
                     <Task key={i} task={task} list={this.props.list} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask} openModal={this.props.openModal} closeModal={this.props.closeModal}/>
                 ))}                
-                <button onClick={this.handleDelete}>Delete</button>
+                <button className='delete-list-button' onClick={this.handleDelete}>Delete</button>
             </div>
         )
     }

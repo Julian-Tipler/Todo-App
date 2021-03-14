@@ -13,11 +13,11 @@ export const deleteTask = task => (
     })
 )
 
-export const updateTask = task => (
+export const updateTask = taskForm => (
     $.ajax({
         method: 'PATCH',
-        url: `api/tasks/${task.id}`,
-        data: task
+        url: `api/tasks/${taskForm.id}`,
+        data: taskForm
     })
 )
 

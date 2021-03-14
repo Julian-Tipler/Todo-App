@@ -34,13 +34,15 @@
 
 .list{
     width: 250px;
+    height: 200px;
     padding: 20px;
     padding-bottom: 50px;
     margin: 15px;
-    border: 2px solid #FA9EB3;
-    border-radius: 5px;
-    background-color: #FFFAE3;
+    border: 1px solid #FA9EB3;
+    border-radius: 2px;
+    background-color: #eef7a5;
     box-shadow: 0 7px 14px rgba(0,0,0,0.09), 0 5px 5px rgba(0,0,0,0.09);
+    position: relative;
 }
 
 .create-task {
@@ -58,9 +60,24 @@
     justify-content: space-between;
     padding-top: 5px;
     padding-bottom: 5px;
+    word-break: break-all;
 }
 
+.task-title {
+    margin-right:10px;
+}
+
+.task-right-buttons {
+    display: flex;
+    height: 20px;
+}
 
 .strikethrough {
     text-decoration: line-through
+}
+
+.delete-list-button {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
 }

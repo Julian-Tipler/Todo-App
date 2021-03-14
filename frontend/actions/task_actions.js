@@ -26,15 +26,15 @@ export const deleteTask = task => dispatch => {
     err=> dispatch(receiveErrors(err)))
 }
 
-export const updateTask = (task) => dispatch => (
-    APIUtil.updateTask(task)
+export const updateTask = (taskForm) => dispatch => (
+    APIUtil.updateTask(taskForm)
     .then(lists => dispatch(receiveLists(lists.lists)),
     err=> dispatch(receiveErrors(err)))
 )
 
-export const fetchTask = (task_id) => dispatch => {
+export const fetchTask = (task_id) => dispatch => (
     APIUtil.fetchTask(task_id)
     .then(task => dispatch(receiveTask(task)),
     err=> dispatch(receiveErrors(err)))
-}
+)
 

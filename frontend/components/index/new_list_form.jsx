@@ -31,7 +31,7 @@ class NewListForm extends React.Component {
           <div >
               <form onSubmit = {this.handleSubmit}>
                   <input type="text" value={this.state.title} onChange={this.update('title')}/>                    
-                  <button type="submit">add</button>
+                  <button type="submit">add list</button>
               </form>
           </div>
         )

@@ -8,24 +8,40 @@ class ModalTask extends React.Component {
             body: "",
             task_id: -1
         }
-        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleCreateComment = this.handleCreateComment.bind(this)
+        this.handleUpdateTask = this.handleUpdateTask.bind(this)
     }
 
     componentDidMount(){
         this.props.fetchTask(this.props.task_id)
+        .then(()=>this.setState({description:this.props.task.description}))
     }
 
-    handleSubmit(e) {
+    handleCreateComment(e) {
       e.preventDefault();
       const commentForm = Object.assign({}, {body:this.state.body}, {task_id:this.props.task.id})
       this.props.createComment(commentForm).then(()=> {
         this.setState({
-        description: "",
-        body: "",
+        ...this.state,
         task_id: -1
         })
       })
-    
+    }
+
+    handleUpdateTask(e) {
+        e.preventDefault();
+        const taskForm = Object.assign({}, {
+            title: this.props.task.title,
+            description: this.state.description,
+            id:this.props.task.id,
+            status: this.props.task.title,
+        })
+        this.props.updateTask(taskForm).then(()=> {
+            this.setState({
+                body: "",
+                task_id: -1
+            })
+        })
     }
 
     update(property) {
@@ -38,16 +54,24 @@ class ModalTask extends React.Component {
         if(!Object.keys(this.props.task).length) return <div>loading...</div>
         return(
             <div className='modal-child-main'>
-                <div className='modal-title description'>Description:</div>
-                <div className='modal-body description-body'>{this.props.task.description}</div>
+                <h2>{this.props.task.title}</h2>
+                <div className='modal-title '>Description:</div>
+
+                <form onSubmit={this.handleUpdateTask}>
+                    <textarea className='modal-description' type="text" value={this.state.description} onChange={this.update('description')}></textarea>
+                    <button style={{display: 'none'}} type="submit" ></button>
+                </form>
+
                 <div className='modal-title comments'>Comments:</div>
+
                 <div className='modal-body comments-body'>
                     {this.props.task.comments.map((comment,i)=> {
-                    return <div key={i}>{comment.body}</div>
+                    return <div className='modal-comment' key={i}>-{comment.body}</div>
                     })}
                 </div>
-                <form onSubmit={this.handleSubmit}>
-                    <input type="text" value={this.state.body} onChange={this.update('body')}/>
+
+                <form onSubmit={this.handleCreateComment}>
+                    <input className='modal-comment-form'type="text" value={this.state.body} onChange={this.update('body')}/>
                     <button type="submit">Submit Comment</button>
                 </form>
             </div>

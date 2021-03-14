@@ -56,9 +56,9 @@ class Task extends React.Component {
                     <div className={`task-title ${this.props.task.status===true ? 'strikethrough' : ""}`} onClick={this.openModal}>{this.props.task.title}</div>   
                     <input type="submit" style={{display:"none"}}/>
                 </form>
-                <div>
-                    <button onClick={this.toggleStatus}>--</button>
-                    <button onClick={this.deleteTask}>X</button>
+                <div class="task-right-buttons">
+                    <button class="fas fa-check" onClick={this.toggleStatus}/>
+                    <button class="fas fa-trash" onClick={this.deleteTask}/>
                 </div>
             </div>
         )

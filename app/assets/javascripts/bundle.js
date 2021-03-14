@@ -290,9 +290,9 @@ var deleteTask = function deleteTask(task) {
     });
   };
 };
-var updateTask = function updateTask(task) {
+var updateTask = function updateTask(taskForm) {
   return function (dispatch) {
-    return _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.updateTask(task).then(function (lists) {
+    return _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.updateTask(taskForm).then(function (lists) {
       return dispatch(receiveLists(lists.lists));
     }, function (err) {
       return dispatch(receiveErrors(err));
@@ -301,7 +301,7 @@ var updateTask = function updateTask(task) {
 };
 var fetchTask = function fetchTask(task_id) {
   return function (dispatch) {
-    _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.fetchTask(task_id).then(function (task) {
+    return _util_task_api_util__WEBPACK_IMPORTED_MODULE_0__.fetchTask(task_id).then(function (task) {
       return dispatch(receiveTask(task));
     }, function (err) {
       return dispatch(receiveErrors(err));
@@ -335,7 +335,7 @@ __webpack_require__.r(__webpack_exports__);
 var App = function App() {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_modal_modal__WEBPACK_IMPORTED_MODULE_1__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", {
     className: "main-title"
-  }, "JULIANS TODO APP"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "TODO APP"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "content"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_index_new_list_form_container__WEBPACK_IMPORTED_MODULE_3__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_index_lists_container__WEBPACK_IMPORTED_MODULE_2__.default, null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("footer", null));
 };
@@ -451,7 +451,7 @@ var List = /*#__PURE__*/function (_Component) {
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "list"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.props.list.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, this.props.list.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
         onSubmit: this.handleSubmitTask
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
         placeholder: "enter task",
@@ -459,6 +459,9 @@ var List = /*#__PURE__*/function (_Component) {
         value: this.state.title,
         onChange: this.updateTask('title')
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+        style: {
+          display: 'none'
+        },
         type: "submit"
       }, "add")), Object.values(this.props.list.tasks).reverse().map(function (task, i) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_task__WEBPACK_IMPORTED_MODULE_1__.default, {
@@ -471,6 +474,7 @@ var List = /*#__PURE__*/function (_Component) {
           closeModal: _this4.props.closeModal
         });
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+        className: "delete-list-button",
         onClick: this.handleDelete
       }, "Delete"));
     }
@@ -755,7 +759,7 @@ var NewListForm = /*#__PURE__*/function (_React$Component) {
         onChange: this.update('title')
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
         type: "submit"
-      }, "add")));
+      }, "add list")));
     }
   }]);
 
@@ -928,11 +932,15 @@ var Task = /*#__PURE__*/function (_React$Component) {
         style: {
           display: "none"
         }
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        "class": "task-right-buttons"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+        "class": "fas fa-check",
         onClick: this.toggleStatus
-      }, "--"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+        "class": "fas fa-trash",
         onClick: this.deleteTask
-      }, "X")));
+      })));
     }
   }]);
 
@@ -972,7 +980,8 @@ function Modal(_ref) {
       closeModal = _ref.closeModal,
       fetchTask = _ref.fetchTask,
       task = _ref.task,
-      createComment = _ref.createComment;
+      createComment = _ref.createComment,
+      updateTask = _ref.updateTask;
 
   if (!modal) {
     return null;
@@ -987,7 +996,8 @@ function Modal(_ref) {
         list_id: modal.list_id,
         fetchTask: fetchTask,
         task: task,
-        createComment: createComment
+        createComment: createComment,
+        updateTask: updateTask
       });
       break;
 
@@ -1032,6 +1042,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     createComment: function createComment(commentForm) {
       return dispatch((0,_actions_comment_actions__WEBPACK_IMPORTED_MODULE_3__.createComment)(commentForm));
+    },
+    updateTask: function updateTask(taskForm) {
+      return dispatch((0,_actions_task_actions__WEBPACK_IMPORTED_MODULE_2__.updateTask)(taskForm));
     }
   };
 };
@@ -1053,6 +1066,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -1094,19 +1111,26 @@ var ModalTask = /*#__PURE__*/function (_React$Component) {
       body: "",
       task_id: -1
     };
-    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
+    _this.handleCreateComment = _this.handleCreateComment.bind(_assertThisInitialized(_this));
+    _this.handleUpdateTask = _this.handleUpdateTask.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(ModalTask, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.props.fetchTask(this.props.task_id);
+      var _this2 = this;
+
+      this.props.fetchTask(this.props.task_id).then(function () {
+        return _this2.setState({
+          description: _this2.props.task.description
+        });
+      });
     }
   }, {
-    key: "handleSubmit",
-    value: function handleSubmit(e) {
-      var _this2 = this;
+    key: "handleCreateComment",
+    value: function handleCreateComment(e) {
+      var _this3 = this;
 
       e.preventDefault();
       var commentForm = Object.assign({}, {
@@ -1115,8 +1139,25 @@ var ModalTask = /*#__PURE__*/function (_React$Component) {
         task_id: this.props.task.id
       });
       this.props.createComment(commentForm).then(function () {
-        _this2.setState({
-          description: "",
+        _this3.setState(_objectSpread(_objectSpread({}, _this3.state), {}, {
+          task_id: -1
+        }));
+      });
+    }
+  }, {
+    key: "handleUpdateTask",
+    value: function handleUpdateTask(e) {
+      var _this4 = this;
+
+      e.preventDefault();
+      var taskForm = Object.assign({}, {
+        title: this.props.task.title,
+        description: this.state.description,
+        id: this.props.task.id,
+        status: this.props.task.title
+      });
+      this.props.updateTask(taskForm).then(function () {
+        _this4.setState({
           body: "",
           task_id: -1
         });
@@ -1125,10 +1166,10 @@ var ModalTask = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "update",
     value: function update(property) {
-      var _this3 = this;
+      var _this5 = this;
 
       return function (e) {
-        return _this3.setState(_defineProperty({}, property, e.target.value));
+        return _this5.setState(_defineProperty({}, property, e.target.value));
       };
     }
   }, {
@@ -1137,21 +1178,33 @@ var ModalTask = /*#__PURE__*/function (_React$Component) {
       if (!Object.keys(this.props.task).length) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, "loading...");
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "modal-child-main"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "modal-title description"
-      }, "Description:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "modal-body description-body"
-      }, this.props.task.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, this.props.task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: "modal-title "
+      }, "Description:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
+        onSubmit: this.handleUpdateTask
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("textarea", {
+        className: "modal-description",
+        type: "text",
+        value: this.state.description,
+        onChange: this.update('description')
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+        style: {
+          display: 'none'
+        },
+        type: "submit"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "modal-title comments"
       }, "Comments:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "modal-body comments-body"
       }, this.props.task.comments.map(function (comment, i) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+          className: "modal-comment",
           key: i
-        }, comment.body);
+        }, "-", comment.body);
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
-        onSubmit: this.handleSubmit
+        onSubmit: this.handleCreateComment
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+        className: "modal-comment-form",
         type: "text",
         value: this.state.body,
         onChange: this.update('body')
@@ -1456,11 +1509,11 @@ var deleteTask = function deleteTask(task) {
     url: "/api/tasks/".concat(task.id)
   });
 };
-var updateTask = function updateTask(task) {
+var updateTask = function updateTask(taskForm) {
   return $.ajax({
     method: 'PATCH',
-    url: "api/tasks/".concat(task.id),
-    data: task
+    url: "api/tasks/".concat(taskForm.id),
+    data: taskForm
   });
 };
 var fetchTask = function fetchTask(task_id) {
