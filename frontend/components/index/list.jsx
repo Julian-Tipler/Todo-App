@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Task from './task'
+import { Draggable } from 'react-beautiful-dnd'
 
 export default class List extends Component {
     constructor(props) {
@@ -42,19 +43,26 @@ export default class List extends Component {
 
     render() {
         return (
-            <div className='list'>
-                <h3>{this.props.list.title}</h3>
+            <Draggable draggableId={`list-${this.props.index}`} index={this.props.index} className='list'>
+                {provided=> (
+                    <div className='list'
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}>
+                        <h3>{this.props.list.title}</h3>
 
-                <form onSubmit={this.handleSubmitTask}>
-                    <input placeholder="enter task" type="text" value={this.state.title} onChange={this.updateTask('title')}/>
-                    <button style={{display: 'none'}} type="submit">add</button>
-                </form>
+                        <form onSubmit={this.handleSubmitTask}>
+                            <input placeholder="enter task" type="text" value={this.state.title} onChange={this.updateTask('title')}/>
+                            <button style={{display: 'none'}} type="submit">add</button>
+                        </form>
 
-                {Object.values(this.props.list.tasks).reverse().map((task, i) => (
-                    <Task key={i} task={task} list={this.props.list} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask} openModal={this.props.openModal} closeModal={this.props.closeModal}/>
-                ))}                
-                <button className='delete-list-button' onClick={this.handleDelete}>Delete</button>
-            </div>
+                        {/* {Object.values(this.props.list.tasks).reverse().map((task, i) => (
+                            <Task key={i} task={task} list={this.props.list} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask} openModal={this.props.openModal} closeModal={this.props.closeModal}/>
+                        ))}                 */}
+                        <button className='delete-list-button' onClick={this.handleDelete}>Delete</button>
+                    </div>
+                )}
+            </Draggable>
         )
     }
 }

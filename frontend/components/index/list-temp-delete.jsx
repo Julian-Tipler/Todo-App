@@ -19,8 +19,7 @@ class List extends React.Component {
       this.updateTask = this.updateTask.bind(this)
     }
     componentDidMount() {
-        // console.log('props list id', this.props.list.id)
-        // console.log('props index', this.props.index)
+        
         // this.setState({
         //     task: {
         //         ...this.state.task,
