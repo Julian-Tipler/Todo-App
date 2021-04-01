@@ -1,18 +1,27 @@
 import React from 'react';
 import List from './list'
+import { DragDropContext, Droppable} from 'react-beautiful-dnd'
 
 class Lists extends React.Component {
     constructor(props) {  
       super(props)
       this.state = {
         title: "",
-        color: "yellow"
+        color: "yellow",
+        lists: [],
       }
       this.handleSubmit = this.handleSubmit.bind(this)
+      this.onDragEnd = this.onDragEnd.bind(this)
     }
     
     componentDidMount() {
         this.props.fetchLists()
+        .then(()=> {
+            this.setState({
+                ...this.state,
+                lists: Object.values(this.props.lists)
+            })
+        })
     }
 
     update(property) {
@@ -31,19 +40,56 @@ class Lists extends React.Component {
         })
     }
 
+    onDragEnd(result) {
+        if (!result.destination) {
+            return;
+        }
+
+        const reorder = (list, startIndex, endIndex) => {
+            const result = Array.from(list);
+            const [removed] = result.splice(startIndex, 1);
+            result.splice(endIndex, 0, removed);
+
+            return result;
+        };
+
+        const lists = reorder(
+        this.state.lists,
+        result.source.index,
+        result.destination.index
+        );
+
+        this.setState({
+            ...this.state,
+            lists
+        });
+    }
+
     render() {
-        if (Object.values(this.props.lists).length <= 0) {                  
+        console.log('props',this.props.lists)
+        console.log('state',this.state.lists)
+        if (Object.values(this.state.lists).length <= 0) {                  
             return(
                 <div></div>
             )
         }
         return(
-            <div className='lists'>
-                {Object.values(this.props.lists).map((list, i) => {
-                // console.log('list from map',list)
-                   return <List key={i} index={i} list={list} destroyList={this.props.destroyList} updateList={this.props.updateList} createTask={this.props.createTask} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask} openModal={this.props.openModal} closeModal={this.props.closeModal}/>
-                 })}
-            </div>
+            <DragDropContext onDragEnd = {this.onDragEnd} className='lists'>
+                <Droppable droppableId='droppable'>
+                    {provided => (
+                        <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                         > 
+                            {this.state.lists.map((list, i) => {
+                            return <List key={i} index={i} list={list} destroyList={this.props.destroyList} updateList={this.props.updateList} createTask={this.props.createTask} deleteTask={this.props.deleteTask} updateTask={this.props.updateTask} openModal={this.props.openModal} closeModal={this.props.closeModal}/>
+                            })}
+                            {provided.placeholder}
+                        </div>
+
+                    )}
+                </Droppable>
+            </DragDropContext>
         )
     }
 }
